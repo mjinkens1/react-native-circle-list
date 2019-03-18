@@ -1,0 +1,187 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  onMoveShouldSetResponder={[Function]}
+  onMoveShouldSetResponderCapture={[Function]}
+  onResponderEnd={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderReject={[Function]}
+  onResponderRelease={[Function]}
+  onResponderStart={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  onStartShouldSetResponderCapture={[Function]}
+  style={
+    Array [
+      Object {
+        "alignSelf": "stretch",
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "position": "relative",
+      },
+      Object {
+        "height": 405,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "position": "absolute",
+        },
+        Object {
+          "transform": Array [
+            Object {
+              "translateX": -8.266365894244634e-14,
+            },
+            Object {
+              "translateY": 0,
+            },
+            Object {
+              "scale": 1.15,
+            },
+          ],
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "position": "absolute",
+        },
+        Object {
+          "transform": Array [
+            Object {
+              "translateX": 224.9999999999996,
+            },
+            Object {
+              "translateY": 60.28856829700237,
+            },
+            Object {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "position": "absolute",
+        },
+        Object {
+          "transform": Array [
+            Object {
+              "translateX": 389.71143170299655,
+            },
+            Object {
+              "translateY": 224.99999999999855,
+            },
+            Object {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "position": "absolute",
+        },
+        Object {
+          "transform": Array [
+            Object {
+              "translateX": 450,
+            },
+            Object {
+              "translateY": 449.99999999999955,
+            },
+            Object {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "position": "absolute",
+        },
+        Object {
+          "transform": Array [
+            Object {
+              "translateX": -450,
+            },
+            Object {
+              "translateY": 449.99999999999955,
+            },
+            Object {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "position": "absolute",
+        },
+        Object {
+          "transform": Array [
+            Object {
+              "translateX": -389.71143170299814,
+            },
+            Object {
+              "translateY": 225.00000000000134,
+            },
+            Object {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "position": "absolute",
+        },
+        Object {
+          "transform": Array [
+            Object {
+              "translateX": -225.00000000000304,
+            },
+            Object {
+              "translateY": 60.28856829700436,
+            },
+            Object {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
+  />
+</View>
+`;
