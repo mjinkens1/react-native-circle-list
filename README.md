@@ -2,7 +2,9 @@
 
 ### Description
 
-A component implemented in Javascript to create a circular list of elements in React Native.
+A React Native component implemented in Javascript to create a circular list of elements, with infinite scroll. Data is mapped onto a fixed number of elements, so no matter how long your list is, it will appear be render in the given circle size.
+
+![](react-native-circle-menu.gif)
 
 ### Installation
 
