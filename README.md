@@ -1,2 +1,2 @@
 # react-native-circle-list
-A javascript implementation ofa circular list for React Native
+A Javascript implementation of a circular list, for React Native.
