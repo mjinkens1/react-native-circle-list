@@ -25,7 +25,7 @@ $ npm install react-native-circle-list
 | onScroll              | undefined                 | Called continuously as the list is scrolled.                                                                                                | No       |
 | onScrollBegin         | undefined                 | Called once when scrolling of the list begins.                                                                                              | No       |
 | onScrollEnd           | undefined                 | Called once when scrolling of the list ends.                                                                                                | No       |
-| radius                | 1.2 \* <screen-width> / 2 | Radius of the circle form by the list elements.                                                                                             | No       |
+| radius                | 1.2 \* (SCREEN_WIDTH / 2) | Radius of the circle form by the list elements.                                                                                             | No       |
 | renderItem            | undefined                 | Function to that returns a React Componet or elements to render, similar to React Native's FlatList.                                        | Yes      |
 | selectedItemScale     | 1.15                      | Scaling factor for the selected item.                                                                                                       | No       |
 | swipeSpeedMultiplier  | 40                        | Postive number to customize how quickly the list rotates in response to a gesture. A higher number means more movement for a given gesture. | No       |
