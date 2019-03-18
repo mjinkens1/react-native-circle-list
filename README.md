@@ -22,6 +22,9 @@ $ npm install react-native-circle-list
 | elementCount          | 12                        | Number of elements that form the circle.                                                                                                    | No       |
 | initialRotationOffset | 3 \* PI / 2               | Inital rotation of list in radians. Default value causes index 0 to be centered.                                                            | No       |
 | keyExtractor          | undefined                 | Function to extract list item keys from dataset, similar to React Native's FlatList                                                         | Yes      |
+| onScroll              | undefined                 | Called continuously as the list is scrolled.                                                                                                | No       |
+| onScrollBegin         | undefined                 | Called once when scrolling of the list begins.                                                                                              | No       |
+| onScrollEnd           | undefined                 | Called once when scrolling of the list ends.                                                                                                | No       |
 | radius                | 1.2 \* <screen-width> / 2 | Radius of the circle form by the list elements.                                                                                             | No       |
 | renderItem            | undefined                 | Function to that returns a React Componet or elements to render, similar to React Native's FlatList.                                        | Yes      |
 | selectedItemScale     | 1.15                      | Scaling factor for the selected item.                                                                                                       | No       |
