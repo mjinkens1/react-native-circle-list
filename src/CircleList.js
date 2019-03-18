@@ -7,7 +7,7 @@ const { OS } = Platform
 const { width } = Dimensions.get('screen')
 const { abs, acos, PI } = Math
 
-export default class CircleList extends PureComponent {
+export class CircleList extends PureComponent {
     static defaultProps = {
         data: [],
         elementCount: 12,

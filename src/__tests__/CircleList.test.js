@@ -1,6 +1,6 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
-import CircleList from '../CircleList'
+import { CircleList } from '../CircleList'
 import { mockData } from '../__mocks__/mockData'
 
 // TODO: Add more test cases
