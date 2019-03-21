@@ -441,7 +441,7 @@ export class CircleList extends PureComponent {
 
             this.dataIndex = this._getDataIndex(direction)
             // Overshoot on last step of scroll for spring effect
-            const thetaOffset = newCount < stepCount ? theta : theta * 1.15
+            const thetaOffset = newCount < stepCount ? theta : theta * 1.1
             this.rotationOffset =
                 direction === 'RIGHT' ? resetOffset + thetaOffset : resetOffset - thetaOffset
             this.selectedIndex = this._getClosestIndex(
@@ -520,11 +520,11 @@ export class CircleList extends PureComponent {
 
                     const xSpring = Animated.spring(this.state[`translateX${index}`], {
                         toValue: translateX,
-                        velocity: abs(0.05 * stepDuration),
+                        velocity: abs(0.03 * stepDuration),
                     })
                     const ySpring = Animated.spring(this.state[`translateY${index}`], {
                         toValue: translateY,
-                        velocity: abs(0.05 * stepDuration),
+                        velocity: abs(0.03 * stepDuration),
                     })
 
                     return Animated.parallel([xSpring, ySpring])
