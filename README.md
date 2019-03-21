@@ -17,7 +17,7 @@ $ npm install react-native-circle-list
 
 ```
 ...
-import { CircleList } from './src/components/CircleList'
+import CircleList from 'react-native-circle-list'
 ...
 
 export class ExampleUsage extends PureComponent {
@@ -30,12 +30,7 @@ export class ExampleUsage extends PureComponent {
         return (
             <CircleList
                 data={mockData}
-                elementCount={16}
                 keyExtractor={this._keyExtractor}
-                radius={RADIUS}
-                innerRef={component => {
-                    this.circleList = component
-                }}
                 renderItem={this._renderItem}
             />
         )
