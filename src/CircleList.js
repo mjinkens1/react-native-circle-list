@@ -65,12 +65,8 @@ export class CircleList extends PureComponent {
             onMoveShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
 
-            onPanResponderGrant: (event, gestureState) => {
-                const { rotationIndex } = this.state
-
-                this._onScrollBegin(event, gestureState, rotationIndex)
-            },
-            onPanResponderMove: (event, gestureState) => {
+            onPanResponderGrant: () => this._onScrollBegin(this.dataIndex),
+            onPanResponderMove: (_, gestureState) => {
                 const { dx, moveX } = gestureState
 
                 // Don't do anything if not a swipe gesture
@@ -134,7 +130,7 @@ export class CircleList extends PureComponent {
                     this.rotationOffset = resetOffset - thetaOffset
                     this.selectedIndex = newRotationIndex
 
-                    this._onScroll(event, gestureState, rotationIndex)
+                    this._onScroll(this.dataIndex)
 
                     return displayData.forEach((_, index) => {
                         const { translateX, translateY } = this._getTransforms(index)
@@ -159,7 +155,7 @@ export class CircleList extends PureComponent {
                     this.state[`translateY${index}`].setValue(translateY)
                 })
 
-                this._onScroll(event, gestureState, rotationIndex)
+                this._onScroll(this.dataIndex)
             },
             onPanResponderTerminationRequest: () => true,
             onPanResponderRelease: (event, gestureState) => {
@@ -210,10 +206,10 @@ export class CircleList extends PureComponent {
 
                     Animated.parallel(animations).start()
 
-                    return this._onScrollEnd(event, gestureState, rotationIndex)
+                    return this._onScrollEnd(this.dataIndex)
                 }
 
-                this._onScrollEnd(event, gestureState, rotationIndex)
+                this._onScrollEnd(this.dataIndex)
             },
             onPanResponderTerminate: () => null,
             onShouldBlockNativeResponder: () => true,
@@ -391,22 +387,22 @@ export class CircleList extends PureComponent {
         return keyExtractor(item, index)
     }
 
-    _onScroll = () => {
+    _onScroll = index => {
         const { onScroll } = this.props
 
-        onScroll && onScroll()
+        onScroll && onScroll(index)
     }
 
-    _onScrollBegin = () => {
+    _onScrollBegin = index => {
         const { onScrollBegin } = this.props
 
-        onScrollBegin && onScrollBegin()
+        onScrollBegin && onScrollBegin(index)
     }
 
-    _onScrollEnd = () => {
+    _onScrollEnd = index => {
         const { onScrollEnd } = this.props
 
-        onScrollEnd && onScrollEnd()
+        onScrollEnd && onScrollEnd(index)
     }
 
     _renderItem = ({ item, index }) => {
