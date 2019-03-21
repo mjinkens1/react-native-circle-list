@@ -4,7 +4,8 @@
     "description": "A Javascript implementation of a circular list, for React Native",
     "main": "index.js",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "publish": "npm version patch && npm publish"
     },
     "repository": {
         "type": "git",
