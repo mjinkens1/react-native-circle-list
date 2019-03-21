@@ -507,6 +507,7 @@ export class CircleList extends PureComponent {
             <CircleListLayout
                 calcHeight={this._calcHeight}
                 containerStyle={containerStyle}
+                dataIndex={this.dataIndex}
                 displayData={displayData}
                 keyExtractor={this._keyExtractor}
                 panHandlers={this._panResponder.panHandlers}
