@@ -13,14 +13,45 @@ $ yarn add react-native-circle-list
 $ npm install react-native-circle-list
 ```
 
+### Example Usage
+
+```
+...
+import { CircleList } from './src/components/CircleList'
+...
+
+export class ExampleUsage extends PureComponent {
+
+    _keyExtractor = item => item.id
+
+    _renderItem = ({ item }) => <CircleListItem label={`Label ${item.value}`} value={item.value} />
+
+    render() {
+        return (
+            <CircleList
+                data={mockData}
+                elementCount={16}
+                keyExtractor={this._keyExtractor}
+                radius={RADIUS}
+                innerRef={component => {
+                    this.circleList = component
+                }}
+                renderItem={this._renderItem}
+            />
+        )
+    }
+}
+```
+
 ### Props
 
 | Prop                  | Default                   | Description                                                                                                                                 | Required |
 | --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| containerStyle        | undefined                 | Override default container styling.                                                                                                          | No       |
+| containerStyle        | undefined                 | Override default container styling.                                                                                                         | No       |
 | data                  | []                        | Array of objects, similar to React Native's FlatList.                                                                                       | Yes      |
 | elementCount          | 12                        | Number of elements that form the circle.                                                                                                    | No       |
 | initialRotationOffset | 3 \* PI / 2               | Inital rotation of list in radians. Default value causes index 0 to be centered.                                                            | No       |
+| innerRef              | undefined                 | Gets the ref for the CircleList component .                                                                                                 | No       |
 | keyExtractor          | undefined                 | Function to extract list item keys from dataset, similar to React Native's FlatList                                                         | Yes      |
 | onScroll              | undefined                 | Called continuously as the list is scrolled.                                                                                                | No       |
 | onScrollBegin         | undefined                 | Called once when scrolling of the list begins.                                                                                              | No       |
@@ -30,5 +61,11 @@ $ npm install react-native-circle-list
 | selectedItemScale     | 1.15                      | Scaling factor for the selected item.                                                                                                       | No       |
 | swipeSpeedMultiplier  | 40                        | Postive number to customize how quickly the list rotates in response to a gesture. A higher number means more movement for a given gesture. | No       |
 | visiblityPadding      | 3                         | How many elements to show on either side of the selected element.                                                                           | No       |
+
+### Methods
+
+| Method        | Arguments             | Description                                                                                                                      |
+| ------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| scrollToIndex | (index, stepDuration) | Scrolls to the specified index. Speed is constant and is specified as the time to scroll from the current index to +/- one index |
 
 ### PRs Welcome!
