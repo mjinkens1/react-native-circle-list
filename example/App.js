@@ -84,10 +84,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
     },
-    view1: {
-        backgroundColor: 'yellow',
-    },
-    view2: {
-        backgroundColor: 'orange',
-    },
 })

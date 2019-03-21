@@ -17,7 +17,7 @@ $ npm install react-native-circle-list
 
 | Prop                  | Default                   | Description                                                                                                                                 | Required |
 | --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| containerStyle        | undefined                 | Overide default container styling.                                                                                                          | No       |
+| containerStyle        | undefined                 | Override default container styling.                                                                                                          | No       |
 | data                  | []                        | Array of objects, similar to React Native's FlatList.                                                                                       | Yes      |
 | elementCount          | 12                        | Number of elements that form the circle.                                                                                                    | No       |
 | initialRotationOffset | 3 \* PI / 2               | Inital rotation of list in radians. Default value causes index 0 to be centered.                                                            | No       |
