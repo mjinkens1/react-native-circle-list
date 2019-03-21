@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 export const CircleListLayout = ({
     calcHeight,
     containerStyle,
-    dataIndex,
     displayData,
     keyExtractor,
     panHandlers,
@@ -31,7 +30,7 @@ export const CircleListLayout = ({
                                 },
                             ]}
                         >
-                            {renderItem({ item, index: dataIndex })}
+                            {renderItem({ item, index })}
                         </Animated.View>
                     )
                 )
