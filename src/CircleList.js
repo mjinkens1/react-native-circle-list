@@ -29,7 +29,6 @@ export class CircleList extends PureComponent {
         onScrollEnd: PropTypes.func,
         radius: PropTypes.number,
         renderItem: PropTypes.func.isRequired,
-        responderZoneInsets: PropTypes.object,
         selectedItemScale: PropTypes.number,
         swipeSpeedMultiplier: PropTypes.number,
         visibilityPadding: PropTypes.number,
@@ -441,7 +440,10 @@ export class CircleList extends PureComponent {
                     : this.rotationOffset
 
             this.dataIndex = this._getDataIndex(direction)
-            this.rotationOffset = direction === 'RIGHT' ? resetOffset + theta : resetOffset - theta
+            // Overshoot on last step of scroll for spring effect
+            const thetaOffset = newCount < stepCount ? theta : theta * 1.15
+            this.rotationOffset =
+                direction === 'RIGHT' ? resetOffset + thetaOffset : resetOffset - thetaOffset
             this.selectedIndex = this._getClosestIndex(
                 this.rotationOffset,
                 breakpoints,
@@ -496,7 +498,42 @@ export class CircleList extends PureComponent {
                     return step(newCount)
                 }
 
-                this._onScrollEnd(this.dataIndex)
+                const selectedIndex = this._getClosestIndex(
+                    this.rotationOffset,
+                    breakpoints,
+                    theta,
+                    direction
+                )
+
+                const snapOffset = 2 * PI - breakpoints[selectedIndex]
+
+                this.rotationOffset = snapOffset
+
+                this.setState({ rotationIndex: selectedIndex })
+
+                const finalAnimations = displayData.map((_, index) => {
+                    const { translateX, translateY } = this._getTransforms(index)
+
+                    this.state[`scale${index}`].setValue(
+                        index === this.selectedIndex ? selectedItemScale : 1
+                    )
+
+                    const xSpring = Animated.spring(this.state[`translateX${index}`], {
+                        toValue: translateX,
+                        velocity: abs(0.05 * stepDuration),
+                    })
+                    const ySpring = Animated.spring(this.state[`translateY${index}`], {
+                        toValue: translateY,
+                        velocity: abs(0.05 * stepDuration),
+                    })
+
+                    return Animated.parallel([xSpring, ySpring])
+                })
+
+                Animated.parallel(finalAnimations).start(() => {
+                    this.setState({ scrolling: false })
+                    this._onScrollEnd(this.dataIndex)
+                })
             })
         }
 
@@ -526,7 +563,7 @@ export class CircleList extends PureComponent {
     }
 
     render() {
-        const { containerStyle, radius, responderZoneInsets } = this.props
+        const { containerStyle, radius } = this.props
         const { data, displayData, theta } = this.state
 
         return (
@@ -539,7 +576,6 @@ export class CircleList extends PureComponent {
                 panHandlers={this._panResponder.panHandlers}
                 radius={radius}
                 renderItem={this._renderItem}
-                responderZoneInsets={responderZoneInsets}
                 state={this.state}
                 theta={theta}
             />
