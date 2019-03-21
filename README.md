@@ -2,7 +2,7 @@
 
 ### Description
 
-A React Native component implemented in Javascript to create a circular list of elements, with infinite scroll. Data is mapped onto a fixed number of elements, so no matter how long your list is, it will appear to render in the given circle size.
+A React Native component implemented in Javascript to create a circular list of elements with infinite scroll. Data is mapped onto a fixed number of elements so no matter how long your list is, it will appear to render in the given circle size.
 
 ![](react-native-circle-list.gif)
 
@@ -27,9 +27,11 @@ export class ExampleUsage extends PureComponent {
     _renderItem = ({ item }) => <CircleListItem label={`Label ${item.value}`} value={item.value} />
 
     render() {
+        const { data } = this.props
+        
         return (
             <CircleList
-                data={mockData}
+                data={data}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderItem}
             />
