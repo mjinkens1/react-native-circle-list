@@ -532,8 +532,9 @@ export class CircleList extends PureComponent {
 
                 Animated.parallel(finalAnimations).start(() => {
                     this.setState({ scrolling: false })
-                    this._onScrollEnd(this.dataIndex)
                 })
+
+                return this._onScrollEnd(this.dataIndex)
             })
         }
 
