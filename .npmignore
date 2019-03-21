@@ -1,5 +1,7 @@
-node_modules
+/node_modules
 /example
+*/__mocks__
+*/__tests__
 *.gif
 .eslintrc.js
 .prettierrc
