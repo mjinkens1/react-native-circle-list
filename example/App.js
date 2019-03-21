@@ -9,6 +9,7 @@ const RADIUS = (1.5 * width) / 2
 
 export default class App extends PureComponent {
     state = {
+        scrolling: false,
         text: '0',
     }
 
@@ -31,10 +32,14 @@ export default class App extends PureComponent {
         this.circleList.scrollToIndex(scrollIndex)
     }
 
+    _onScrollBegin = () => this.setState({ scrolling: true })
+
+    _onScrollEnd = () => this.setState({ scrolling: false })
+
     _renderItem = ({ item }) => <CircleListItem label={`Label ${item.value}`} value={item.value} />
 
     render() {
-        const { text } = this.state
+        const { scrolling, text } = this.state
 
         return (
             <View style={styles.container}>
@@ -46,6 +51,8 @@ export default class App extends PureComponent {
                     innerRef={component => {
                         this.circleList = component
                     }}
+                    onScrollBegin={this._onScrollBegin}
+                    onScrollEnd={this._onScrollEnd}
                     renderItem={this._renderItem}
                 />
                 <Text>Choose Scroll Index</Text>
@@ -56,6 +63,7 @@ export default class App extends PureComponent {
                     value={text}
                 />
                 <Button onPress={this._onPress} title={`Scroll To Index ${text}`} />
+                <Text style={{ opacity: scrolling ? 1 : 0 }}>Scrolling...</Text>
             </View>
         )
     }
