@@ -65,15 +65,7 @@ export class CircleList extends PureComponent {
             onMoveShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
 
-            onPanResponderGrant: (_, gestureState) => {
-                const { dx } = gestureState
-                // Don't do anything if not a swipe gesture
-                if (dx === 0) {
-                    return
-                }
-
-                this._onScrollBegin(this.dataIndex)
-            },
+            onPanResponderGrant: () => this._onScrollBegin(this.dataIndex),
             onPanResponderMove: (_, gestureState) => {
                 const { dx, moveX } = gestureState
 
