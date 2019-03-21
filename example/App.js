@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Button, Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
-import { CircleList } from './src/components/CircleList'
+import CircleList from 'react-native-circle-list'
 import { CircleListItem } from './src/components/CircleListItem'
 import { mockData } from './src/mockData'
 

@@ -4811,7 +4811,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@^15.5.8, prop-types@^15.6.2:
+prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -4900,7 +4900,16 @@ react-is@^16.8.1, react-is@^16.8.3, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
   integrity sha512-PVadd+WaUDOAciICm/J1waJaSvgq+4rHE/K70j0PFqKhkTBsPv/82UGQJNXAngz1fOQLLxI6z1sEDmJDQhCTAA==
 
-react-native@0.59.1:
+react-native-circle-list@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-circle-list/-/react-native-circle-list-0.1.4.tgz#a762d0cfeba78156eb0046b7234d857da320f249"
+  integrity sha512-EuYiQYft6logTjY2W9Uw3XDAemaIYMteDoZF3JnFQDvHcoQTyba6BSXDrIJeRR/lMq+I03+zut08syC/gzYqRA==
+  dependencies:
+    prop-types "^15.7.2"
+    react "^16.8.4"
+    react-native "^0.59.1"
+
+react-native@0.59.1, react-native@^0.59.1:
   version "0.59.1"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.59.1.tgz#3274dcc0f9558799bd41c8092acac2a79bd627ce"
   integrity sha512-KA/MyoCQLGavPBc/Q2QRfdbxHuKHTcYTks9xwwRPzgDqTfmTuDcyoC6jUBTfhZ0LEes5GMoKVM4eVrYUbprOmw==
@@ -4991,6 +5000,16 @@ react@16.8.3:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.13.3"
+
+react@^16.8.4:
+  version "16.8.4"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.8.4.tgz#fdf7bd9ae53f03a9c4cd1a371432c206be1c4768"
+  integrity sha512-0GQ6gFXfUH7aZcjGVymlPOASTuSjlQL4ZtVC5YKH+3JL6bBLCVO21DknzmaPlI90LN253ojj02nsapy+j7wIjg==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.13.4"
 
 read-pkg-up@^2.0.0:
   version "2.0.0"
@@ -5323,7 +5342,7 @@ sax@~1.1.1:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.6.tgz#5d616be8a5e607d54e114afae55b7eaf2fcc3240"
   integrity sha1-XWFr6KXmB9VOEUr65Vt+ry/MMkA=
 
-scheduler@^0.13.3:
+scheduler@^0.13.3, scheduler@^0.13.4:
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.4.tgz#8fef05e7a3580c76c0364d2df5e550e4c9140298"
   integrity sha512-cvSOlRPxOHs5dAhP9yiS/6IDmVAVxmk33f0CtTJRkmUWcb1Us+t7b1wqdzoC0REw2muC9V5f1L/w5R5uKGaepA==
