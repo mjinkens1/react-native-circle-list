@@ -4900,10 +4900,10 @@ react-is@^16.8.1, react-is@^16.8.3, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
   integrity sha512-PVadd+WaUDOAciICm/J1waJaSvgq+4rHE/K70j0PFqKhkTBsPv/82UGQJNXAngz1fOQLLxI6z1sEDmJDQhCTAA==
 
-react-native-circle-list@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/react-native-circle-list/-/react-native-circle-list-0.1.4.tgz#a762d0cfeba78156eb0046b7234d857da320f249"
-  integrity sha512-EuYiQYft6logTjY2W9Uw3XDAemaIYMteDoZF3JnFQDvHcoQTyba6BSXDrIJeRR/lMq+I03+zut08syC/gzYqRA==
+react-native-circle-list@^0.1.14:
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/react-native-circle-list/-/react-native-circle-list-0.1.14.tgz#29d785efc594c1ecbd44e70c52a0d6e76dcbfdf1"
+  integrity sha512-0P5miEBGEHVHYBaM39ULOXWU1odcaXKuqSpZrOrTGJ5MGmtNB7eXslqNjbvRsd9KzWC2FxmvgbhYixi42o/mcg==
   dependencies:
     prop-types "^15.7.2"
     react "^16.8.4"
