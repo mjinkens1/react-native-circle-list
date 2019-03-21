@@ -49,6 +49,7 @@ export class CircleList extends PureComponent {
             insertionIndexLeft: elementCount - visibilityPadding - 1,
             insertionIndexRight: visibilityPadding + 1,
             rotationIndex: 0,
+            scrolling: false,
             theta: (2 * PI) / elementCount,
         }
 
@@ -65,7 +66,7 @@ export class CircleList extends PureComponent {
             onMoveShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
 
-            onPanResponderGrant: () => this._onScrollBegin(this.dataIndex),
+            onPanResponderGrant: () => null,
             onPanResponderMove: (_, gestureState) => {
                 const { dx, moveX } = gestureState
 
@@ -75,7 +76,13 @@ export class CircleList extends PureComponent {
                 }
 
                 const { radius, selectedItemScale, swipeSpeedMultiplier } = this.props
-                const { breakpoints, displayData, rotationIndex, theta } = this.state
+                const { breakpoints, displayData, rotationIndex, scrolling, theta } = this.state
+
+                if (!scrolling) {
+                    this._onScrollBegin(this.dataIndex)
+                    this.setState({ scrolling: true })
+                }
+
                 const { rotationOffset } = this
                 const direction = dx < 0 ? 'LEFT' : 'RIGHT'
                 const xNew = radius - moveX
@@ -204,11 +211,12 @@ export class CircleList extends PureComponent {
                         return Animated.parallel([xSpring, ySpring])
                     })
 
-                    Animated.parallel(animations).start()
+                    Animated.parallel(animations).start(() => this.setState({ scrolling: false }))
 
                     return this._onScrollEnd(this.dataIndex)
                 }
 
+                this.setState({ scrolling: false })
                 this._onScrollEnd(this.dataIndex)
             },
             onPanResponderTerminate: () => null,
@@ -416,6 +424,8 @@ export class CircleList extends PureComponent {
             return
         }
 
+        this._onScrollBegin(this.dataIndex)
+
         const { selectedItemScale } = this.props
         const { breakpoints, displayData, rotationIndex, theta } = this.state
         const { direction, stepCount } = this._getScrollToIndex(index)
@@ -484,6 +494,8 @@ export class CircleList extends PureComponent {
                 if (newCount < stepCount) {
                     return step(newCount)
                 }
+
+                this._onScrollEnd(this.dataIndex)
             })
         }
 
