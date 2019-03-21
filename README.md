@@ -27,9 +27,11 @@ export class ExampleUsage extends PureComponent {
     _renderItem = ({ item }) => <CircleListItem label={`Label ${item.value}`} value={item.value} />
 
     render() {
+        const { data } = this.props
+        
         return (
             <CircleList
-                data={mockData}
+                data={data}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderItem}
             />
