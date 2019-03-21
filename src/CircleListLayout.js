@@ -17,6 +17,7 @@ export const CircleListLayout = ({
                 const scale = state[`scale${index}`]
                 const translateX = state[`translateX${index}`]
                 const translateY = state[`translateY${index}`]
+                const { _dataIndex, ...itemToRender } = item
 
                 return (
                     translateX &&
@@ -30,7 +31,7 @@ export const CircleListLayout = ({
                                 },
                             ]}
                         >
-                            {renderItem({ item, index })}
+                            {renderItem({ item: itemToRender, index: item._dataIndex })}
                         </Animated.View>
                     )
                 )

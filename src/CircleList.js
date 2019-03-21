@@ -38,12 +38,14 @@ export class CircleList extends PureComponent {
         super(props)
 
         const { data, elementCount, visibilityPadding } = props
+        const dataWithIndexes = this._assignIndexes(data)
 
         this.state = {
             breakpoints: this._getBreakpoints(elementCount, (2 * PI) / elementCount),
+            data: dataWithIndexes,
             dataIndexLeft: data.length - visibilityPadding - 1,
             dataIndexRight: visibilityPadding + 1,
-            displayData: this._getOffsetData(),
+            displayData: this._getOffsetData(dataWithIndexes),
             insertionIndexLeft: elementCount - visibilityPadding - 1,
             insertionIndexRight: visibilityPadding + 1,
             rotationIndex: 0,
@@ -63,7 +65,11 @@ export class CircleList extends PureComponent {
             onMoveShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
 
-            onPanResponderGrant: () => this._onScrollBegin(this.dataIndex),
+            onPanResponderGrant: (event, gestureState) => {
+                const { rotationIndex } = this.state
+
+                this._onScrollBegin(event, gestureState, rotationIndex)
+            },
             onPanResponderMove: (event, gestureState) => {
                 const { dx, moveX } = gestureState
 
@@ -128,7 +134,7 @@ export class CircleList extends PureComponent {
                     this.rotationOffset = resetOffset - thetaOffset
                     this.selectedIndex = newRotationIndex
 
-                    this._onScroll(this.dataIndex)
+                    this._onScroll(event, gestureState, rotationIndex)
 
                     return displayData.forEach((_, index) => {
                         const { translateX, translateY } = this._getTransforms(index)
@@ -153,7 +159,7 @@ export class CircleList extends PureComponent {
                     this.state[`translateY${index}`].setValue(translateY)
                 })
 
-                this._onScroll(this.dataIndex)
+                this._onScroll(event, gestureState, rotationIndex)
             },
             onPanResponderTerminationRequest: () => true,
             onPanResponderRelease: (event, gestureState) => {
@@ -204,14 +210,25 @@ export class CircleList extends PureComponent {
 
                     Animated.parallel(animations).start()
 
-                    return this._onScrollEnd(this.dataIndex)
+                    return this._onScrollEnd(event, gestureState, rotationIndex)
                 }
 
-                this._onScrollEnd(this.dataIndex)
+                this._onScrollEnd(event, gestureState, rotationIndex)
             },
             onPanResponderTerminate: () => null,
             onShouldBlockNativeResponder: () => true,
         })
+    }
+
+    _assignIndexes = data => {
+        if (!data) {
+            return
+        }
+
+        return data.map((item, index) => ({
+            ...item,
+            _dataIndex: index,
+        }))
     }
 
     _calcHeight = () => {
@@ -251,7 +268,7 @@ export class CircleList extends PureComponent {
     }
 
     _getDataIndex = direction => {
-        const { data } = this.props
+        const { data } = this.state
         const { length } = data
 
         if (direction === 'LEFT') {
@@ -266,8 +283,7 @@ export class CircleList extends PureComponent {
     }
 
     _getDisplayData = (dataIndexLeft, dataIndexRight, insertionIndexLeft, insertionIndexRight) => {
-        const { data } = this.props
-        const { displayData } = this.state
+        const { data, displayData } = this.state
 
         return Object.assign([...displayData], {
             [insertionIndexLeft]: data[dataIndexLeft],
@@ -276,7 +292,8 @@ export class CircleList extends PureComponent {
     }
 
     _getInsertionIndex = (direction, type) => {
-        const { data, elementCount } = this.props
+        const { elementCount } = this.props
+        const { data } = this.state
         const {
             dataIndexLeft,
             dataIndexRight,
@@ -315,15 +332,15 @@ export class CircleList extends PureComponent {
         }
     }
 
-    _getOffsetData = () => {
-        const { data, elementCount } = this.props
+    _getOffsetData = data => {
+        const { elementCount } = this.props
         const { length } = data
 
         return [...data.slice(0, elementCount / 2), ...data.slice(length - elementCount / 2)]
     }
 
     _getScrollToIndex = index => {
-        const { data } = this.props
+        const { data } = this.state
         const { length } = data
 
         if (index > this.dataIndex) {
@@ -374,22 +391,22 @@ export class CircleList extends PureComponent {
         return keyExtractor(item, index)
     }
 
-    _onScroll = index => {
+    _onScroll = () => {
         const { onScroll } = this.props
 
-        onScroll && onScroll(index)
+        onScroll && onScroll()
     }
 
-    _onScrollBegin = index => {
+    _onScrollBegin = () => {
         const { onScrollBegin } = this.props
 
-        onScrollBegin && onScrollBegin(index)
+        onScrollBegin && onScrollBegin()
     }
 
-    _onScrollEnd = index => {
+    _onScrollEnd = () => {
         const { onScrollEnd } = this.props
 
-        onScrollEnd && onScrollEnd(index)
+        onScrollEnd && onScrollEnd()
     }
 
     _renderItem = ({ item, index }) => {
@@ -501,12 +518,13 @@ export class CircleList extends PureComponent {
 
     render() {
         const { containerStyle, radius } = this.props
-        const { displayData, theta } = this.state
+        const { data, displayData, theta } = this.state
 
         return (
             <CircleListLayout
                 calcHeight={this._calcHeight}
                 containerStyle={containerStyle}
+                data={data}
                 displayData={displayData}
                 keyExtractor={this._keyExtractor}
                 panHandlers={this._panResponder.panHandlers}
