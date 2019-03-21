@@ -12,7 +12,7 @@ export const CircleListLayout = ({
     responderZoneInsets,
     state,
 }) => (
-    <View {...panHandlers} style={[styles.container, { height: calcHeight() }, containerStyle]}>
+    <View style={[styles.container, { height: calcHeight() }, containerStyle]}>
         <View {...panHandlers} style={[styles.responderZone, responderZoneInsets]} />
         <View style={styles.wrapper}>
             {displayData.map((item, index) => {
