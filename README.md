@@ -42,23 +42,22 @@ export class ExampleUsage extends PureComponent {
 
 ### Props
 
-| Prop                  | Default                                | Description                                                                                                                                 | Required |
-| --------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| containerStyle        | undefined                              | Override default container styling.                                                                                                         | No       |
-| data                  | []                                     | Array of objects, similar to React Native's FlatList.                                                                                       | Yes      |
-| elementCount          | 12                                     | Number of elements that form the circle.                                                                                                    | No       |
-| initialRotationOffset | 3 \* PI / 2                            | Inital rotation of list in radians. Default value causes index 0 to be centered.                                                            | No       |
-| innerRef              | undefined                              | Gets the ref for the CircleList component .                                                                                                 | No       |
-| keyExtractor          | undefined                              | Function to extract list item keys from dataset, similar to React Native's FlatList                                                         | Yes      |
-| onScroll              | undefined                              | Called continuously as the list is scrolled.                                                                                                | No       |
-| onScrollBegin         | undefined                              | Called once when scrolling of the list begins.                                                                                              | No       |
-| onScrollEnd           | undefined                              | Called once when scrolling of the list ends.                                                                                                | No       |
-| radius                | 1.2 \* (SCREEN_WIDTH / 2)              | Radius of the circle form by the list elements.                                                                                             | No       |
-| renderItem            | undefined                              | Function to that returns a React Componet or elements to render, similar to React Native's FlatList.                                        | Yes      |
-| responderZoneInsets   | {top: 0, right: 0, bottom: 0, left: 0} | Insets to reduce the zone which responds to touches. Can be useful for using with touchable list items.                                     | No       |
-| selectedItemScale     | 1.15                                   | Scaling factor for the selected item.                                                                                                       | No       |
-| swipeSpeedMultiplier  | 40                                     | Postive number to customize how quickly the list rotates in response to a gesture. A higher number means more movement for a given gesture. | No       |
-| visiblityPadding      | 3                                      | How many elements to show on either side of the selected element.                                                                           | No       |
+| Prop                  | Default                   | Description                                                                                                                                 | Required |
+| --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| containerStyle        | undefined                 | Override default container styling.                                                                                                         | No       |
+| data                  | []                        | Array of objects, similar to React Native's FlatList.                                                                                       | Yes      |
+| elementCount          | 12                        | Number of elements that form the circle.                                                                                                    | No       |
+| initialRotationOffset | 3 \* PI / 2               | Inital rotation of list in radians. Default value causes index 0 to be centered.                                                            | No       |
+| innerRef              | undefined                 | Gets the ref for the CircleList component .                                                                                                 | No       |
+| keyExtractor          | undefined                 | Function to extract list item keys from dataset, similar to React Native's FlatList                                                         | Yes      |
+| onScroll              | undefined                 | Called continuously as the list is scrolled.                                                                                                | No       |
+| onScrollBegin         | undefined                 | Called once when scrolling of the list begins.                                                                                              | No       |
+| onScrollEnd           | undefined                 | Called once when scrolling of the list ends.                                                                                                | No       |
+| radius                | 1.2 \* (SCREEN_WIDTH / 2) | Radius of the circle form by the list elements.                                                                                             | No       |
+| renderItem            | undefined                 | Function to that returns a React Componet or elements to render, similar to React Native's FlatList.                                        | Yes      |
+| selectedItemScale     | 1.15                      | Scaling factor for the selected item.                                                                                                       | No       |
+| swipeSpeedMultiplier  | 40                        | Postive number to customize how quickly the list rotates in response to a gesture. A higher number means more movement for a given gesture. | No       |
+| visiblityPadding      | 3                         | How many elements to show on either side of the selected element.                                                                           | No       |
 
 ### Methods
 
