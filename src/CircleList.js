@@ -564,7 +564,7 @@ export class CircleList extends PureComponent {
     }
 
     render() {
-        const { containerStyle, radius } = this.props
+        const { containerStyle, radius, responderZoneInsets } = this.props
         const { data, displayData, theta } = this.state
 
         return (
@@ -577,6 +577,7 @@ export class CircleList extends PureComponent {
                 panHandlers={this._panResponder.panHandlers}
                 radius={radius}
                 renderItem={this._renderItem}
+                responderZoneInsets={responderZoneInsets}
                 state={this.state}
                 theta={theta}
             />
