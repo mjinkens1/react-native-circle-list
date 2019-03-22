@@ -6,8 +6,6 @@ import { CircleListLayout } from './CircleListLayout'
 const { width } = Dimensions.get('screen')
 const { abs, acos, cos, PI, sin } = Math
 
-// TODO: Add support for use as a normal horizontal list with infinite scroll
-
 export class CircleList extends PureComponent {
     static defaultProps = {
         data: [],
@@ -479,6 +477,28 @@ export class CircleList extends PureComponent {
         return renderItem({ item, index })
     }
 
+    _setElementPositions = () => {
+        const { displayData } = this.state
+
+        this._innerRef()
+
+        const transforms = displayData.reduce((acc, _, index) => {
+            const { selectedItemScale } = this.props
+            const { translateX, translateY } = this._getTransforms(index)
+
+            return {
+                ...acc,
+                [`scale${index}`]: new Animated.Value(
+                    index === this.selectedIndex ? selectedItemScale : 1
+                ),
+                [`translateX${index}`]: new Animated.Value(translateX),
+                [`translateY${index}`]: new Animated.Value(translateY),
+            }
+        }, {})
+
+        this.setState({ ...transforms })
+    }
+
     scrollToIndex = (index, stepDuration = 30) => {
         if (index === this.dataIndex) {
             return
@@ -604,25 +624,15 @@ export class CircleList extends PureComponent {
     }
 
     componentDidMount() {
-        const { displayData } = this.state
+        this._setElementPositions()
+    }
 
-        this._innerRef()
+    componentDidUpdate(prevProps) {
+        const { flatness } = this.props
 
-        const transforms = displayData.reduce((acc, _, index) => {
-            const { selectedItemScale } = this.props
-            const { translateX, translateY } = this._getTransforms(index)
-
-            return {
-                ...acc,
-                [`scale${index}`]: new Animated.Value(
-                    index === this.selectedIndex ? selectedItemScale : 1
-                ),
-                [`translateX${index}`]: new Animated.Value(translateX),
-                [`translateY${index}`]: new Animated.Value(translateY),
-            }
-        }, {})
-
-        this.setState({ ...transforms })
+        if (prevProps.flatness !== flatness) {
+            this._setElementPositions()
+        }
     }
 
     render() {
