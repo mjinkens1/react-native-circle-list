@@ -6,10 +6,13 @@ import { CircleListLayout } from './CircleListLayout'
 const { width } = Dimensions.get('screen')
 const { abs, acos, cos, PI, sin } = Math
 
+// TODO: Add support for use as a normal horizontal list with infinite scroll
+
 export class CircleList extends PureComponent {
     static defaultProps = {
         data: [],
         elementCount: 12,
+        flatness: 0,
         initialRotationOffset: (3 * PI) / 2,
         radius: (1.2 * width) / 2,
         selectedItemScale: 1.15,
@@ -21,6 +24,7 @@ export class CircleList extends PureComponent {
         data: PropTypes.array.isRequired,
         containerStyle: PropTypes.object,
         elementCount: PropTypes.number,
+        flatness: PropTypes.number,
         initialRotationOffset: PropTypes.number,
         innerRef: PropTypes.func,
         keyExtractor: PropTypes.func.isRequired,
@@ -40,6 +44,10 @@ export class CircleList extends PureComponent {
         const { data, elementCount, visibilityPadding } = props
         const dataWithIndexes = this._assignIndexes(data)
 
+        this.dataIndex = 0
+        this.rotationOffset = 0
+        this.selectedIndex = 0
+
         this.state = {
             breakpoints: this._getBreakpoints(elementCount, (2 * PI) / elementCount),
             data: dataWithIndexes,
@@ -51,11 +59,8 @@ export class CircleList extends PureComponent {
             rotationIndex: 0,
             scrolling: false,
             theta: (2 * PI) / elementCount,
+            visibleDataBounds: this._getVisibleElements(),
         }
-
-        this.dataIndex = 0
-        this.rotationOffset = 0
-        this.selectedIndex = 0
 
         this._innerRef = this._innerRef.bind(this)
 
@@ -123,6 +128,7 @@ export class CircleList extends PureComponent {
                         insertionIndexLeft,
                         insertionIndexRight
                     )
+                    const visibleDataBounds = this._getVisibleElements()
 
                     this.setState({
                         dataIndexLeft,
@@ -131,6 +137,7 @@ export class CircleList extends PureComponent {
                         insertionIndexLeft,
                         insertionIndexRight,
                         rotationIndex: newRotationIndex,
+                        visibleDataBounds,
                     })
 
                     this.dataIndex = newDataIndex
@@ -373,14 +380,67 @@ export class CircleList extends PureComponent {
     }
 
     _getTransforms = index => {
-        const { initialRotationOffset, radius } = this.props
+        const { flatness, initialRotationOffset, radius } = this.props
         const { theta } = this.state
 
         const thetaOffset = 2 * PI * index + (this.rotationOffset + initialRotationOffset)
         const translateX = radius * cos(index * theta + thetaOffset)
-        const translateY = radius * sin(index * theta + thetaOffset) + radius
+        const translateY =
+            (1 - flatness) * radius * sin(index * theta + thetaOffset) + (1 - flatness) * radius
 
         return { translateX, translateY }
+    }
+
+    _getVisibleElements = () => {
+        const { data, visibilityPadding } = this.props
+        const { length } = data
+
+        const leftBound = this.dataIndex - visibilityPadding - 1
+        const leftBoundAdjusted = leftBound < 0 ? length + leftBound : leftBound
+        const rightBound = this.dataIndex + visibilityPadding + 1
+        const rightBoundAdjusted = rightBound > length ? rightBound - length : rightBound
+
+        const _getBounds = (currentIndex, boundsArray) => {
+            const newIndex = currentIndex + 1
+            const newBoundsArray = boundsArray.concat(newIndex)
+
+            if (newIndex < rightBoundAdjusted) {
+                return _getBounds(newIndex, newBoundsArray)
+            }
+
+            return newBoundsArray
+        }
+
+        if (leftBoundAdjusted > rightBoundAdjusted) {
+            const _getLeftBounds = (currentIndex, boundsArray) => {
+                const newIndex = currentIndex + 1
+                const newBoundsArray = boundsArray.concat(newIndex)
+
+                if (newIndex < length) {
+                    return _getLeftBounds(newIndex, newBoundsArray)
+                }
+
+                return newBoundsArray
+            }
+
+            const _getRightBounds = (currentIndex, boundsArray) => {
+                const newIndex = currentIndex + 1
+                const newBoundsArray = boundsArray.concat(newIndex)
+
+                if (newIndex < rightBoundAdjusted) {
+                    return _getRightBounds(newIndex, newBoundsArray)
+                }
+
+                return newBoundsArray
+            }
+
+            const leftBounds = _getLeftBounds(leftBoundAdjusted, [leftBoundAdjusted])
+            const rightBounds = _getRightBounds(0, [0])
+
+            return [...leftBounds, ...rightBounds]
+        }
+
+        return _getBounds(leftBoundAdjusted, [leftBoundAdjusted])
     }
 
     _innerRef = () => {
@@ -483,6 +543,7 @@ export class CircleList extends PureComponent {
                     insertionIndexRight
                 )
                 const newRotationIndex = this.selectedIndex
+                const visibleDataBounds = this._getVisibleElements()
 
                 if (newRotationIndex !== rotationIndex)
                     this.setState({
@@ -492,6 +553,7 @@ export class CircleList extends PureComponent {
                         insertionIndexLeft,
                         insertionIndexRight,
                         rotationIndex: newRotationIndex,
+                        visibleDataBounds,
                     })
 
                 if (newCount < stepCount) {
@@ -565,7 +627,7 @@ export class CircleList extends PureComponent {
 
     render() {
         const { containerStyle, radius, responderZoneInsets } = this.props
-        const { data, displayData, theta } = this.state
+        const { data, displayData, theta, visibleDataBounds } = this.state
 
         return (
             <CircleListLayout
@@ -580,6 +642,7 @@ export class CircleList extends PureComponent {
                 responderZoneInsets={responderZoneInsets}
                 state={this.state}
                 theta={theta}
+                visibleDataBounds={visibleDataBounds}
             />
         )
     }

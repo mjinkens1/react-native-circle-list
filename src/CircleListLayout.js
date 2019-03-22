@@ -11,6 +11,7 @@ export const CircleListLayout = ({
     renderItem,
     responderZoneInsets,
     state,
+    visibleDataBounds,
 }) => (
     <View style={[styles.container, { height: calcHeight() }, containerStyle]}>
         <View {...panHandlers} style={[styles.responderZone, responderZoneInsets]} />
@@ -23,7 +24,9 @@ export const CircleListLayout = ({
 
                 return (
                     translateX &&
-                    translateY && (
+                    translateY &&
+                    visibleDataBounds &&
+                    visibleDataBounds.includes(_dataIndex) && (
                         <Animated.View
                             key={keyExtractor(item, index)}
                             style={[
@@ -71,14 +74,11 @@ const styles = StyleSheet.create({
 CircleListLayout.propTypes = {
     calcHeight: PropTypes.func.isRequired,
     containerStyle: PropTypes.object,
-    data: PropTypes.array,
     displayData: PropTypes.array,
-    elementCount: PropTypes.number,
-    initialRotationOffset: PropTypes.number,
     keyExtractor: PropTypes.func.isRequired,
     panHandlers: PropTypes.object.isRequired,
     renderItem: PropTypes.func.isRequired,
-    swipeSpeedMultiplier: PropTypes.number,
-    theta: PropTypes.number.isRequired,
-    visibilityPadding: PropTypes.number,
+    responderZoneInsets: PropTypes.object,
+    state: PropTypes.object,
+    visibleDataBounds: PropTypes.array,
 }
