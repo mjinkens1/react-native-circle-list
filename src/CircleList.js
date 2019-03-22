@@ -64,10 +64,26 @@ export class CircleList extends PureComponent {
 
         this._panResponder = PanResponder.create({
             // Ask to be the responder:
-            onStartShouldSetPanResponder: () => false,
-            onStartShouldSetPanResponderCapture: () => false,
-            onMoveShouldSetPanResponder: () => true,
-            onMoveShouldSetPanResponderCapture: () => true,
+            onStartShouldSetPanResponder: (_, gestureState) => {
+                const { dx, dy } = gestureState
+
+                return dx !== 0 || dy !== 0
+            },
+            onStartShouldSetPanResponderCapture: (_, gestureState) => {
+                const { dx, dy } = gestureState
+
+                return dx !== 0 || dy !== 0
+            },
+            onMoveShouldSetPanResponder: (_, gestureState) => {
+                const { dx, dy } = gestureState
+
+                return dx !== 0 || dy !== 0
+            },
+            onMoveShouldSetPanResponderCapture: (_, gestureState) => {
+                const { dx, dy } = gestureState
+
+                return dx !== 0 || dy !== 0
+            },
 
             onPanResponderGrant: () => null,
             onPanResponderMove: (_, gestureState) => {
@@ -170,7 +186,7 @@ export class CircleList extends PureComponent {
                 this._onScroll(this.dataIndex)
             },
             onPanResponderTerminationRequest: () => true,
-            onPanResponderRelease: (event, gestureState) => {
+            onPanResponderRelease: (_, gestureState) => {
                 const { dx, vx } = gestureState
 
                 // Don't do anything if not a swipe gesture
@@ -252,9 +268,8 @@ export class CircleList extends PureComponent {
 
             if (count < elementCount - 1) {
                 return _calc(newBreakpoints, count + 1)
-            } else {
-                return newBreakpoints
             }
+            return newBreakpoints
         }
 
         return _calc([], 0)
@@ -265,12 +280,10 @@ export class CircleList extends PureComponent {
             if (offset >= 0) {
                 if (index === 0 && direction === 'LEFT') {
                     return 2 * PI - abs(breakpoints.length * separationAngle - offset)
-                } else {
-                    return abs((breakpoints.length - index) * separationAngle - offset)
                 }
-            } else {
-                return abs(offset + index * separationAngle)
+                return abs((breakpoints.length - index) * separationAngle - offset)
             }
+            return abs(offset + index * separationAngle)
         })
 
         return offsets.indexOf(Math.min(...offsets))
@@ -284,7 +297,8 @@ export class CircleList extends PureComponent {
             const incrementedIndex = this.dataIndex + 1
 
             return incrementedIndex >= length ? incrementedIndex - length : incrementedIndex
-        } else if (direction === 'RIGHT') {
+        }
+        if (direction === 'RIGHT') {
             const decrementedIndex = this.dataIndex - 1
 
             return decrementedIndex < 0 ? decrementedIndex + length : decrementedIndex
@@ -329,7 +343,8 @@ export class CircleList extends PureComponent {
                     : incrementedIndexRight,
             ]
             // Decrement index for right swipe, wrap if less than zero
-        } else if (direction === 'RIGHT') {
+        }
+        if (direction === 'RIGHT') {
             const decrementedIndexLeft = indexLeft - 1
             const decrementedIndexRight = indexRight - 1
 
@@ -363,17 +378,16 @@ export class CircleList extends PureComponent {
                 direction: 'RIGHT',
                 stepCount: length - index + this.dataIndex,
             }
-        } else {
-            if (this.dataIndex - index < length - this.dataIndex + index) {
-                return {
-                    direction: 'RIGHT',
-                    stepCount: this.dataIndex - index,
-                }
-            }
+        }
+        if (this.dataIndex - index < length - this.dataIndex + index) {
             return {
-                direction: 'LEFT',
-                stepCount: data.length - this.dataIndex + index,
+                direction: 'RIGHT',
+                stepCount: this.dataIndex - index,
             }
+        }
+        return {
+            direction: 'LEFT',
+            stepCount: data.length - this.dataIndex + index,
         }
     }
 
@@ -521,7 +535,7 @@ export class CircleList extends PureComponent {
 
             this.dataIndex = this._getDataIndex(direction)
             // Overshoot on last step of scroll for spring effect
-            const thetaOffset = newCount < stepCount ? theta : theta * 1.1
+            const thetaOffset = newCount < stepCount ? theta : theta * 1.07
             this.rotationOffset =
                 direction === 'RIGHT' ? resetOffset + thetaOffset : resetOffset - thetaOffset
             this.selectedIndex = this._getClosestIndex(
@@ -636,7 +650,7 @@ export class CircleList extends PureComponent {
     }
 
     render() {
-        const { containerStyle, radius, responderZoneInsets } = this.props
+        const { containerStyle, radius } = this.props
         const { data, displayData, theta, visibleDataBounds } = this.state
 
         return (
@@ -649,7 +663,6 @@ export class CircleList extends PureComponent {
                 panHandlers={this._panResponder.panHandlers}
                 radius={radius}
                 renderItem={this._renderItem}
-                responderZoneInsets={responderZoneInsets}
                 state={this.state}
                 theta={theta}
                 visibleDataBounds={visibleDataBounds}

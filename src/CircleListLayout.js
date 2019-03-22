@@ -9,12 +9,10 @@ export const CircleListLayout = ({
     keyExtractor,
     panHandlers,
     renderItem,
-    responderZoneInsets,
     state,
     visibleDataBounds,
 }) => (
-    <View style={[styles.container, { height: calcHeight() }, containerStyle]}>
-        <View {...panHandlers} style={[styles.responderZone, responderZoneInsets]} />
+    <View {...panHandlers} style={[styles.container, { height: calcHeight() }, containerStyle]}>
         <View style={styles.wrapper}>
             {displayData.map((item, index) => {
                 const scale = state[`scale${index}`]
@@ -78,7 +76,6 @@ CircleListLayout.propTypes = {
     keyExtractor: PropTypes.func.isRequired,
     panHandlers: PropTypes.object.isRequired,
     renderItem: PropTypes.func.isRequired,
-    responderZoneInsets: PropTypes.object,
     state: PropTypes.object,
     visibleDataBounds: PropTypes.array,
 }
