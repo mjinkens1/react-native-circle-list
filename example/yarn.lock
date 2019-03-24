@@ -832,6 +832,11 @@
     xcode "^2.0.0"
     xmldoc "^0.4.0"
 
+"@react-native-community/slider@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-1.0.3.tgz#a49027519d56f4408356ebf04a7b226ce4001cda"
+  integrity sha512-IEg7AdayIAb9ZA8KMilTwINMNgSwhF5BXNqwvJ2XsRd+JF12/r5ho+t+GONu8m2rWcCehiiM/h4pds1B9FzMlQ==
+
 "@types/babel__core@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.0.tgz#710f2487dda4dcfd010ca6abb2b4dc7394365c51"
@@ -4900,10 +4905,10 @@ react-is@^16.8.1, react-is@^16.8.3, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
   integrity sha512-PVadd+WaUDOAciICm/J1waJaSvgq+4rHE/K70j0PFqKhkTBsPv/82UGQJNXAngz1fOQLLxI6z1sEDmJDQhCTAA==
 
-react-native-circle-list@^0.1.24:
-  version "0.1.24"
-  resolved "https://registry.yarnpkg.com/react-native-circle-list/-/react-native-circle-list-0.1.24.tgz#95222014f3d8a5487e9a9744736bc48b236893c3"
-  integrity sha512-yJhXQdn1iiF6nU7lJFtdvt1nfr1szohzcq8JYJ2igsyxOnN8s06BsayVeTy35CoPUZ+kpnNJCBGd775wOKKw4Q==
+react-native-circle-list@^0.1.26:
+  version "0.1.26"
+  resolved "https://registry.yarnpkg.com/react-native-circle-list/-/react-native-circle-list-0.1.26.tgz#b03b3b66932dfff9fd0d01da0af29cc8d8d781ff"
+  integrity sha512-qW1P4b+3ILE02tC27sdFMPghkdUhOq8QQ1+gXCyKJqU0tQOHtIThnZJ2zRe+D9GhC18CGghh29R2fxhHiRtFHQ==
   dependencies:
     prop-types "^15.7.2"
     react "^16.8.4"

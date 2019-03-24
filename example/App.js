@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Button, Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
+import Slider from '@react-native-community/slider'
 import CircleList from 'react-native-circle-list'
 import { CircleListItem } from './src/components/CircleListItem'
 import { mockData } from './src/mockData'
@@ -9,6 +10,7 @@ const RADIUS = (1.5 * width) / 2
 
 export default class App extends PureComponent {
     state = {
+        flatness: 0,
         scrolling: false,
         text: '0',
     }
@@ -36,16 +38,19 @@ export default class App extends PureComponent {
 
     _onScrollEnd = () => this.setState({ scrolling: false })
 
+    _onSliderChange = flatness => this.setState({ flatness })
+
     _renderItem = ({ item }) => <CircleListItem label={`Label ${item.value}`} value={item.value} />
 
     render() {
-        const { scrolling, text } = this.state
+        const { flatness, scrolling, text } = this.state
 
         return (
             <View style={styles.container}>
                 <CircleList
                     data={mockData}
                     elementCount={16}
+                    flatness={flatness}
                     keyExtractor={this._keyExtractor}
                     radius={RADIUS}
                     innerRef={component => {
@@ -64,6 +69,16 @@ export default class App extends PureComponent {
                 />
                 <Button onPress={this._onPress} title={`Scroll To Index ${text}`} />
                 <Text style={{ opacity: scrolling ? 1 : 0 }}>Scrolling...</Text>
+                <Slider
+                    minimumValue={0}
+                    maximumValue={1}
+                    minimumTrackTintColor="blue"
+                    maximumTrackTintColor="black"
+                    onValueChange={this._onSliderChange}
+                    style={styles.slider}
+                    thumbTouchSize={styles.sliderTouch}
+                />
+                <Text>Flatness</Text>
             </View>
         )
     }
@@ -75,6 +90,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
+    },
+    slider: {
+        width: 200,
+        height: 40,
+    },
+    sliderTouch: {
+        width: 50,
+        height: 40,
     },
     text: {
         textAlign: 'center',

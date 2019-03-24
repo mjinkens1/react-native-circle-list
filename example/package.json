@@ -6,9 +6,10 @@
         "test": "jest"
     },
     "dependencies": {
+        "@react-native-community/slider": "^1.0.3",
         "react": "16.8.3",
         "react-native": "0.59.1",
-        "react-native-circle-list": "^0.1.24"
+        "react-native-circle-list": "^0.1.26"
     },
     "devDependencies": {
         "@babel/core": "^7.4.0",
