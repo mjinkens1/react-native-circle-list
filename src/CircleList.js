@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Animated, Dimensions, PanResponder, Text } from 'react-native'
+import { Animated, Dimensions, PanResponder } from 'react-native'
 import PropTypes from 'prop-types'
 import { CircleListLayout } from './CircleListLayout'
 
@@ -10,6 +10,7 @@ const ROTATION_OFFSET = (3 * PI) / 2
 export class CircleList extends PureComponent {
     static defaultProps = {
         data: [],
+        disabled: false,
         elementCount: 12,
         flatness: 0,
         radius: (1.2 * width) / 2,
@@ -19,8 +20,9 @@ export class CircleList extends PureComponent {
     }
 
     static propTypes = {
-        data: PropTypes.array.isRequired,
         containerStyle: PropTypes.object,
+        data: PropTypes.array.isRequired,
+        disabled: PropTypes.bool,
         elementCount: PropTypes.number,
         flatness: PropTypes.number,
         innerRef: PropTypes.func,
@@ -38,7 +40,7 @@ export class CircleList extends PureComponent {
     constructor(props) {
         super(props)
 
-        const { data, elementCount, visibilityPadding } = props
+        const { data, disabled, elementCount, visibilityPadding } = props
         const dataWithIndexes = this._assignIndexes(data)
 
         this.dataIndex = 0
@@ -50,6 +52,7 @@ export class CircleList extends PureComponent {
             data: dataWithIndexes,
             dataIndexLeft: data.length - visibilityPadding - 1,
             dataIndexRight: visibilityPadding + 1,
+            disabled: disabled,
             displayData: this._getOffsetData(dataWithIndexes),
             insertionIndexLeft: elementCount - visibilityPadding - 1,
             insertionIndexRight: visibilityPadding + 1,
@@ -65,24 +68,28 @@ export class CircleList extends PureComponent {
         this._panResponder = PanResponder.create({
             // Ask to be the responder:
             onStartShouldSetPanResponder: (_, gestureState) => {
+                const { disabled } = this.state
                 const { dx, dy } = gestureState
 
-                return dx !== 0 || dy !== 0
+                return (dx !== 0 || dy !== 0) && !disabled
             },
             onStartShouldSetPanResponderCapture: (_, gestureState) => {
+                const { disabled } = this.state
                 const { dx, dy } = gestureState
 
-                return dx !== 0 || dy !== 0
+                return (dx !== 0 || dy !== 0) && !disabled
             },
             onMoveShouldSetPanResponder: (_, gestureState) => {
+                const { disabled } = this.state
                 const { dx, dy } = gestureState
 
-                return dx !== 0 || dy !== 0
+                return (dx !== 0 || dy !== 0) && !disabled
             },
             onMoveShouldSetPanResponderCapture: (_, gestureState) => {
+                const { disabled } = this.state
                 const { dx, dy } = gestureState
 
-                return dx !== 0 || dy !== 0
+                return (dx !== 0 || dy !== 0) && !disabled
             },
 
             onPanResponderGrant: () => null,
@@ -515,11 +522,14 @@ export class CircleList extends PureComponent {
     }
 
     scrollToIndex = (index, duration = 250) => {
-        if (index === this.dataIndex) {
+        const { disabled } = this.state
+
+        if (index === this.dataIndex || disabled) {
             return
         }
 
         this._onScrollBegin(this.dataIndex)
+        this.setState({ disabled: true, scrolling: true })
 
         const { selectedItemScale } = this.props
         const { breakpoints, displayData, rotationIndex, theta, transforms } = this.state
@@ -629,10 +639,10 @@ export class CircleList extends PureComponent {
                 })
 
                 Animated.parallel(finalAnimations).start(() => {
-                    this.setState({ scrolling: false })
+                    this.setState({ disabled: false, scrolling: false })
                 })
 
-                return this._onScrollEnd(this.dataIndex)
+                this._onScrollEnd(this.dataIndex)
             })
         }
 
