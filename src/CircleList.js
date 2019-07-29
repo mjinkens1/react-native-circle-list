@@ -1,18 +1,17 @@
 import React, { PureComponent } from 'react'
-import { Animated, Dimensions, PanResponder } from 'react-native'
+import { Animated, Dimensions, PanResponder, Text } from 'react-native'
 import PropTypes from 'prop-types'
 import { CircleListLayout } from './CircleListLayout'
 
 const { width } = Dimensions.get('screen')
 const { abs, acos, cos, PI, sin } = Math
-const ROTATION_OFFSET = (3 * PI) / 2
 
 export class CircleList extends PureComponent {
     static defaultProps = {
         data: [],
-        disabled: false,
         elementCount: 12,
         flatness: 0,
+        initialRotationOffset: (3 * PI) / 2,
         radius: (1.2 * width) / 2,
         selectedItemScale: 1.15,
         swipeSpeedMultiplier: 30,
@@ -20,11 +19,11 @@ export class CircleList extends PureComponent {
     }
 
     static propTypes = {
-        containerStyle: PropTypes.object,
         data: PropTypes.array.isRequired,
-        disabled: PropTypes.bool,
+        containerStyle: PropTypes.object,
         elementCount: PropTypes.number,
         flatness: PropTypes.number,
+        initialRotationOffset: PropTypes.number,
         innerRef: PropTypes.func,
         keyExtractor: PropTypes.func.isRequired,
         onScroll: PropTypes.func,
@@ -40,29 +39,27 @@ export class CircleList extends PureComponent {
     constructor(props) {
         super(props)
 
-        const { data, disabled, elementCount, visibilityPadding } = props
+        const { data, elementCount, visibilityPadding } = props
         const dataWithIndexes = this._assignIndexes(data)
         const elementCountWithMin = Math.max(elementCount, 12)
+        const elementCountWithMax = Math.min(elementCountWithMin, 40)
 
         this.dataIndex = 0
         this.rotationOffset = 0
         this.selectedIndex = 0
 
         this.state = {
-            breakpoints: this._getBreakpoints(elementCountWithMin, (2 * PI) / elementCountWithMin),
+            breakpoints: this._getBreakpoints(elementCountWithMax, (2 * PI) / elementCountWithMax),
             data: dataWithIndexes,
             dataIndexLeft: data.length - visibilityPadding - 1,
             dataIndexRight: visibilityPadding + 1,
-            disabled: disabled,
-            displayData: this._getOffsetData(dataWithIndexes, elementCountWithMin),
-            elementCount: elementCountWithMin,
-            insertionIndexLeft: elementCountWithMin - visibilityPadding - 1,
+            displayData: this._getOffsetData(dataWithIndexes, elementCountWithMax),
+            elementCount: elementCountWithMax,
+            insertionIndexLeft: elementCountWithMax - visibilityPadding - 1,
             insertionIndexRight: visibilityPadding + 1,
             rotationIndex: 0,
             scrolling: false,
-            selectedIndex: 0,
-            theta: (2 * PI) / elementCountWithMin,
-            transforms: {},
+            theta: (2 * PI) / elementCountWithMax,
             visibleDataBounds: this._getVisibleElements(),
         }
 
@@ -71,28 +68,24 @@ export class CircleList extends PureComponent {
         this._panResponder = PanResponder.create({
             // Ask to be the responder:
             onStartShouldSetPanResponder: (_, gestureState) => {
-                const { disabled } = this.state
                 const { dx, dy } = gestureState
 
-                return (dx !== 0 || dy !== 0) && !disabled
+                return dx !== 0 || dy !== 0
             },
             onStartShouldSetPanResponderCapture: (_, gestureState) => {
-                const { disabled } = this.state
                 const { dx, dy } = gestureState
 
-                return (dx !== 0 || dy !== 0) && !disabled
+                return dx !== 0 || dy !== 0
             },
             onMoveShouldSetPanResponder: (_, gestureState) => {
-                const { disabled } = this.state
                 const { dx, dy } = gestureState
 
-                return (dx !== 0 || dy !== 0) && !disabled
+                return dx !== 0 || dy !== 0
             },
             onMoveShouldSetPanResponderCapture: (_, gestureState) => {
-                const { disabled } = this.state
                 const { dx, dy } = gestureState
 
-                return (dx !== 0 || dy !== 0) && !disabled
+                return dx !== 0 || dy !== 0
             },
 
             onPanResponderGrant: () => null,
@@ -105,15 +98,7 @@ export class CircleList extends PureComponent {
                 }
 
                 const { radius, selectedItemScale, swipeSpeedMultiplier } = this.props
-                const {
-                    breakpoints,
-                    displayData,
-                    rotationIndex,
-                    scrolling,
-                    selectedIndex,
-                    theta,
-                    transforms,
-                } = this.state
+                const { breakpoints, displayData, rotationIndex, scrolling, theta } = this.state
 
                 if (!scrolling) {
                     this._onScrollBegin(this.dataIndex)
@@ -124,8 +109,10 @@ export class CircleList extends PureComponent {
                 const direction = dx < 0 ? 'LEFT' : 'RIGHT'
                 const xNew = radius - moveX
                 const directionFactor = dx > 0 ? -1 : 1
-                const thetaOffset =
-                    (swipeSpeedMultiplier / 1000) * directionFactor * acos(xNew / radius)
+
+                const thetaOffset = isNaN(acos(xNew / radius))
+                    ? 0
+                    : (swipeSpeedMultiplier / 1000) * directionFactor * acos(xNew / radius)
 
                 // Reset rotation offset after one full revolution in either direction
                 const resetOffset =
@@ -169,7 +156,6 @@ export class CircleList extends PureComponent {
                         insertionIndexLeft,
                         insertionIndexRight,
                         rotationIndex: newRotationIndex,
-                        selectedIndex: newRotationIndex,
                         visibleDataBounds,
                     })
 
@@ -182,12 +168,11 @@ export class CircleList extends PureComponent {
                     return displayData.forEach((_, index) => {
                         const { translateX, translateY } = this._getTransforms(index)
 
-                        transforms[`scale${index}`].setValue(
-                            // index === this.selectedIndex ? selectedItemScale : 1
-                            index === selectedIndex ? selectedItemScale : 1
+                        this.state[`scale${index}`].setValue(
+                            index === this.selectedIndex ? selectedItemScale : 1
                         )
-                        transforms[`translateX${index}`].setValue(translateX)
-                        transforms[`translateY${index}`].setValue(translateY)
+                        this.state[`translateX${index}`].setValue(translateX)
+                        this.state[`translateY${index}`].setValue(translateY)
                     })
                 }
 
@@ -196,12 +181,11 @@ export class CircleList extends PureComponent {
                 displayData.forEach((_, index) => {
                     const { translateX, translateY } = this._getTransforms(index)
 
-                    transforms[`scale${index}`].setValue(
-                        // index === this.selectedIndex ? selectedItemScale : 1
-                        index === selectedIndex ? selectedItemScale : 1
+                    this.state[`scale${index}`].setValue(
+                        index === this.selectedIndex ? selectedItemScale : 1
                     )
-                    transforms[`translateX${index}`].setValue(translateX)
-                    transforms[`translateY${index}`].setValue(translateY)
+                    this.state[`translateX${index}`].setValue(translateX)
+                    this.state[`translateY${index}`].setValue(translateY)
                 })
 
                 this._onScroll(this.dataIndex)
@@ -216,50 +200,49 @@ export class CircleList extends PureComponent {
                 }
 
                 const { selectedItemScale } = this.props
-                const { breakpoints, displayData, selectedIndex, theta, transforms } = this.state
+                const { breakpoints, displayData, rotationIndex, theta } = this.state
                 const direction = dx < 0 ? 'LEFT' : 'RIGHT'
-                // const selectedIndex = this._getClosestIndex(
-                //     this.rotationOffset,
-                //     breakpoints,
-                //     theta,
-                //     direction
-                // )
-                const newSelectedIndex = this._getClosestIndex(
+                const selectedIndex = this._getClosestIndex(
                     this.rotationOffset,
                     breakpoints,
                     theta,
                     direction
                 )
-                // Calculate offset to snap to nearest index
-                // const snapOffset = 2 * PI - breakpoints[selectedIndex]
-                const snapOffset = 2 * PI - breakpoints[newSelectedIndex]
 
-                this.rotationOffset = snapOffset
+                // Only get snap animations if rotation index has changed
+                if (selectedIndex !== this.rotationIndex) {
+                    // Calculate offset to snap to nearest index
+                    const snapOffset = 2 * PI - breakpoints[selectedIndex]
 
-                this.setState({ rotationIndex: newSelectedIndex, selectedIndex: newSelectedIndex })
+                    this.rotationOffset = snapOffset
 
-                const animations = displayData.map((_, index) => {
-                    const { translateX, translateY } = this._getTransforms(index)
+                    this.setState({ rotationIndex: selectedIndex })
 
-                    transforms[`scale${index}`].setValue(
-                        // index === this.selectedIndex ? selectedItemScale : 1
-                        index === selectedIndex ? selectedItemScale : 1
-                    )
+                    const animations = displayData.map((_, index) => {
+                        const { translateX, translateY } = this._getTransforms(index)
 
-                    const xSpring = Animated.spring(transforms[`translateX${index}`], {
-                        toValue: translateX,
-                        velocity: abs(vx),
+                        this.state[`scale${index}`].setValue(
+                            index === this.selectedIndex ? selectedItemScale : 1
+                        )
+
+                        const xSpring = Animated.spring(this.state[`translateX${index}`], {
+                            toValue: translateX,
+                            velocity: abs(vx),
+                        })
+                        const ySpring = Animated.spring(this.state[`translateY${index}`], {
+                            toValue: translateY,
+                            velocity: abs(vx),
+                        })
+
+                        return Animated.parallel([xSpring, ySpring])
                     })
-                    const ySpring = Animated.spring(transforms[`translateY${index}`], {
-                        toValue: translateY,
-                        velocity: abs(vx),
-                    })
 
-                    return Animated.parallel([xSpring, ySpring])
-                })
+                    Animated.parallel(animations).start(() => this.setState({ scrolling: false }))
 
-                Animated.parallel(animations).start(() => this.setState({ scrolling: false }))
+                    return this._onScrollEnd(this.dataIndex)
+                }
 
+                this.setState({ scrolling: false })
                 this._onScrollEnd(this.dataIndex)
             },
             onPanResponderTerminate: () => null,
@@ -379,8 +362,7 @@ export class CircleList extends PureComponent {
         }
     }
 
-    _getOffsetData = data => {
-        const { elementCount } = this.state
+    _getOffsetData = (data, elementCount) => {
         const { length } = data
 
         return [...data.slice(0, elementCount / 2), ...data.slice(length - elementCount / 2)]
@@ -415,10 +397,10 @@ export class CircleList extends PureComponent {
     }
 
     _getTransforms = index => {
-        const { flatness, radius } = this.props
+        const { flatness, initialRotationOffset, radius } = this.props
         const { theta } = this.state
 
-        const thetaOffset = 2 * PI * index + (this.rotationOffset + ROTATION_OFFSET)
+        const thetaOffset = 2 * PI * index + (this.rotationOffset + initialRotationOffset)
         const translateX = radius * cos(index * theta + thetaOffset)
         const translateY =
             (1 - flatness) * radius * sin(index * theta + thetaOffset) + (1 - flatness) * radius
@@ -526,38 +508,26 @@ export class CircleList extends PureComponent {
             return {
                 ...acc,
                 [`scale${index}`]: new Animated.Value(
-                    // index === this.selectedIndex ? selectedItemScale : 1
-                    index === selectedIndex ? selectedItemScale : 1
+                    index === this.selectedIndex ? selectedItemScale : 1
                 ),
                 [`translateX${index}`]: new Animated.Value(translateX),
                 [`translateY${index}`]: new Animated.Value(translateY),
             }
         }, {})
 
-        this.setState({ transforms })
+        this.setState({ ...transforms })
     }
 
-    scrollToIndex = (index, duration = 250) => {
-        const { disabled } = this.state
-
-        if (index === this.dataIndex || disabled) {
+    scrollToIndex = (index, stepDuration = 30) => {
+        if (index === this.dataIndex) {
             return
         }
 
         this._onScrollBegin(this.dataIndex)
-        this.setState({ disabled: true, scrolling: true })
 
         const { selectedItemScale } = this.props
-        const {
-            breakpoints,
-            displayData,
-            rotationIndex,
-            selectedIndex,
-            theta,
-            transforms,
-        } = this.state
+        const { breakpoints, displayData, rotationIndex, theta } = this.state
         const { direction, stepCount } = this._getScrollToIndex(index)
-        const stepDuration = duration / stepCount
 
         const step = currentCount => {
             const newCount = currentCount + 1
@@ -573,13 +543,7 @@ export class CircleList extends PureComponent {
             const thetaOffset = newCount < stepCount ? theta : theta * 1.07
             this.rotationOffset =
                 direction === 'RIGHT' ? resetOffset + thetaOffset : resetOffset - thetaOffset
-            // this.selectedIndex = this._getClosestIndex(
-            //     this.rotationOffset,
-            //     breakpoints,
-            //     theta,
-            //     direction
-            // )
-            const newSelectedIndex = this._getClosestIndex(
+            this.selectedIndex = this._getClosestIndex(
                 this.rotationOffset,
                 breakpoints,
                 theta,
@@ -589,15 +553,15 @@ export class CircleList extends PureComponent {
             const animations = displayData.map((_, index) => {
                 const { translateX, translateY } = this._getTransforms(index)
 
-                transforms[`scale${index}`].setValue(
-                    index === selectedIndex ? selectedItemScale : 1
+                this.state[`scale${index}`].setValue(
+                    index === this.selectedIndex ? selectedItemScale : 1
                 )
 
-                const xTiming = Animated.timing(transforms[`translateX${index}`], {
+                const xTiming = Animated.timing(this.state[`translateX${index}`], {
                     toValue: translateX,
                     duration: stepDuration,
                 })
-                const yTiming = Animated.timing(transforms[`translateY${index}`], {
+                const yTiming = Animated.timing(this.state[`translateY${index}`], {
                     toValue: translateY,
                     duration: stepDuration,
                 })
@@ -617,8 +581,7 @@ export class CircleList extends PureComponent {
                     insertionIndexLeft,
                     insertionIndexRight
                 )
-                // const newRotationIndex = this.selectedIndex
-                const newRotationIndex = newSelectedIndex
+                const newRotationIndex = this.selectedIndex
                 const visibleDataBounds = this._getVisibleElements()
 
                 if (newRotationIndex !== rotationIndex)
@@ -629,7 +592,6 @@ export class CircleList extends PureComponent {
                         insertionIndexLeft,
                         insertionIndexRight,
                         rotationIndex: newRotationIndex,
-                        selectedIndex: newSelectedIndex,
                         visibleDataBounds,
                     })
 
@@ -637,38 +599,31 @@ export class CircleList extends PureComponent {
                     return step(newCount)
                 }
 
-                // const selectedIndex = this._getClosestIndex(
-                //     this.rotationOffset,
-                //     breakpoints,
-                //     theta,
-                //     direction
-                // )
-                const newSelectedIndex = this._getClosestIndex(
+                const selectedIndex = this._getClosestIndex(
                     this.rotationOffset,
                     breakpoints,
                     theta,
                     direction
                 )
 
-                // const snapOffset = 2 * PI - breakpoints[selectedIndex]
-                const snapOffset = 2 * PI - breakpoints[newSelectedIndex]
+                const snapOffset = 2 * PI - breakpoints[selectedIndex]
 
                 this.rotationOffset = snapOffset
 
-                this.setState({ rotationIndex: newSelectedIndex, selectedIndex: newSelectedIndex })
+                this.setState({ rotationIndex: selectedIndex })
 
                 const finalAnimations = displayData.map((_, index) => {
                     const { translateX, translateY } = this._getTransforms(index)
 
-                    transforms[`scale${index}`].setValue(
+                    this.state[`scale${index}`].setValue(
                         index === this.selectedIndex ? selectedItemScale : 1
                     )
 
-                    const xSpring = Animated.spring(transforms[`translateX${index}`], {
+                    const xSpring = Animated.spring(this.state[`translateX${index}`], {
                         toValue: translateX,
                         velocity: abs(0.03 * stepDuration),
                     })
-                    const ySpring = Animated.spring(transforms[`translateY${index}`], {
+                    const ySpring = Animated.spring(this.state[`translateY${index}`], {
                         toValue: translateY,
                         velocity: abs(0.03 * stepDuration),
                     })
@@ -677,10 +632,10 @@ export class CircleList extends PureComponent {
                 })
 
                 Animated.parallel(finalAnimations).start(() => {
-                    this.setState({ disabled: false, scrolling: false })
+                    this.setState({ scrolling: false })
                 })
 
-                this._onScrollEnd(this.dataIndex)
+                return this._onScrollEnd(this.dataIndex)
             })
         }
 
@@ -700,18 +655,21 @@ export class CircleList extends PureComponent {
     }
 
     render() {
-        const { containerStyle } = this.props
-        const { displayData, transforms, visibleDataBounds } = this.state
+        const { containerStyle, radius } = this.props
+        const { data, displayData, theta, visibleDataBounds } = this.state
 
         return (
             <CircleListLayout
                 calcHeight={this._calcHeight}
                 containerStyle={containerStyle}
+                data={data}
                 displayData={displayData}
                 keyExtractor={this._keyExtractor}
                 panHandlers={this._panResponder.panHandlers}
+                radius={radius}
                 renderItem={this._renderItem}
-                transforms={transforms}
+                state={this.state}
+                theta={theta}
                 visibleDataBounds={visibleDataBounds}
             />
         )
