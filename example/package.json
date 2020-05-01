@@ -1,25 +1,31 @@
 {
-    "name": "CircleList",
-    "version": "0.0.3",
-    "scripts": {
-        "start": "node node_modules/react-native/local-cli/cli.js start",
-        "test": "jest"
-    },
-    "dependencies": {
-        "@react-native-community/slider": "^1.0.3",
-        "react": "16.8.3",
-        "react-native": "0.59.1",
-        "react-native-circle-list": "^0.1.26"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.4.0",
-        "@babel/runtime": "^7.4.0",
-        "babel-jest": "^24.5.0",
-        "jest": "^24.5.0",
-        "metro-react-native-babel-preset": "^0.53.1",
-        "react-test-renderer": "16.8.3"
-    },
-    "jest": {
-        "preset": "react-native"
-    }
+  "name": "example",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-community/slider": "^2.0.9",
+    "react": "16.11.0",
+    "react-native": "0.62.2",
+    "react-native-circle-list": "^0.1.30"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.58.0",
+    "react-test-renderer": "16.11.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
 }

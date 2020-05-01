@@ -69,22 +69,18 @@ export class CircleList extends PureComponent {
             // Ask to be the responder:
             onStartShouldSetPanResponder: (_, gestureState) => {
                 const { dx, dy } = gestureState
-
                 return dx !== 0 || dy !== 0
             },
             onStartShouldSetPanResponderCapture: (_, gestureState) => {
                 const { dx, dy } = gestureState
-
                 return dx !== 0 || dy !== 0
             },
             onMoveShouldSetPanResponder: (_, gestureState) => {
                 const { dx, dy } = gestureState
-
                 return dx !== 0 || dy !== 0
             },
             onMoveShouldSetPanResponderCapture: (_, gestureState) => {
                 const { dx, dy } = gestureState
-
                 return dx !== 0 || dy !== 0
             },
 
@@ -462,43 +458,36 @@ export class CircleList extends PureComponent {
 
     _innerRef = () => {
         const { innerRef } = this.props
-
         innerRef && innerRef(this)
     }
 
     _keyExtractor = (item, index) => {
         const { keyExtractor } = this.props
-
         return keyExtractor(item, index)
     }
 
     _onScroll = index => {
         const { onScroll } = this.props
-
         onScroll && onScroll(index)
     }
 
     _onScrollBegin = index => {
         const { onScrollBegin } = this.props
-
         onScrollBegin && onScrollBegin(index)
     }
 
     _onScrollEnd = index => {
         const { onScrollEnd } = this.props
-
         onScrollEnd && onScrollEnd(index)
     }
 
     _renderItem = ({ item, index }) => {
         const { renderItem } = this.props
-
         return renderItem({ item, index })
     }
 
     _setElementPositions = () => {
         const { displayData } = this.state
-
         this._innerRef()
 
         const transforms = displayData.reduce((acc, _, index) => {
