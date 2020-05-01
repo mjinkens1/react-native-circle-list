@@ -1,6 +1,6 @@
 {
     "name": "react-native-circle-list",
-    "version": "0.1.30",
+    "version": "0.1.31",
     "description": "A Javascript implementation of a circular list, for React Native",
     "main": "index.js",
     "scripts": {
