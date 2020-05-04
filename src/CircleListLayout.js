@@ -9,15 +9,15 @@ export const CircleListLayout = ({
     keyExtractor,
     panHandlers,
     renderItem,
-    transforms,
+    state,
     visibleDataBounds,
 }) => (
     <View {...panHandlers} style={[styles.container, { height: calcHeight() }, containerStyle]}>
         <View style={styles.wrapper}>
             {displayData.map((item, index) => {
-                const scale = transforms[`scale${index}`]
-                const translateX = transforms[`translateX${index}`]
-                const translateY = transforms[`translateY${index}`]
+                const scale = state[`scale${index}`]
+                const translateX = state[`translateX${index}`]
+                const translateY = state[`translateY${index}`]
                 const { _dataIndex, ...itemToRender } = item
 
                 return (

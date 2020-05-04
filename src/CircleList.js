@@ -14,7 +14,7 @@ export class CircleList extends PureComponent {
         initialRotationOffset: (3 * PI) / 2,
         radius: (1.2 * width) / 2,
         selectedItemScale: 1.15,
-        swipeSpeedMultiplier: 30,
+        swipeSpeedMultiplier: 60,
         visibilityPadding: 3,
     }
 
@@ -224,10 +224,12 @@ export class CircleList extends PureComponent {
                         const xSpring = Animated.spring(this.state[`translateX${index}`], {
                             toValue: translateX,
                             velocity: abs(vx),
+                            useNativeDriver: true,
                         })
                         const ySpring = Animated.spring(this.state[`translateY${index}`], {
                             toValue: translateY,
                             velocity: abs(vx),
+                            useNativeDriver: true,
                         })
 
                         return Animated.parallel([xSpring, ySpring])
@@ -549,10 +551,12 @@ export class CircleList extends PureComponent {
                 const xTiming = Animated.timing(this.state[`translateX${index}`], {
                     toValue: translateX,
                     duration: stepDuration,
+                    useNativeDriver: true,
                 })
                 const yTiming = Animated.timing(this.state[`translateY${index}`], {
                     toValue: translateY,
                     duration: stepDuration,
+                    useNativeDriver: true,
                 })
 
                 return Animated.parallel([xTiming, yTiming])
@@ -611,10 +615,12 @@ export class CircleList extends PureComponent {
                     const xSpring = Animated.spring(this.state[`translateX${index}`], {
                         toValue: translateX,
                         velocity: abs(0.03 * stepDuration),
+                        useNativeDriver: true,
                     })
                     const ySpring = Animated.spring(this.state[`translateY${index}`], {
                         toValue: translateY,
                         velocity: abs(0.03 * stepDuration),
+                        useNativeDriver: true,
                     })
 
                     return Animated.parallel([xSpring, ySpring])
